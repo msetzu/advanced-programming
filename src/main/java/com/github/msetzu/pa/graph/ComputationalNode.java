@@ -1,4 +1,4 @@
-package com.github.msetzu.pa.graph.test;
+package com.github.msetzu.pa.graph;
 
 import java.util.List;
 
