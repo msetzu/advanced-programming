@@ -4,13 +4,14 @@ import java.util.HashMap;
 
 public abstract class Node<V> extends HashMap<String, V> {
 	protected String name;
+	protected int m;
+	protected int n;
 
-	protected Node(String name) { this.name = name; }
+	public int getM() { return m; }
+
+	public int getN() { return n; }
+
+	protected Node(String name, int m, int n) { this.name = name; this.m = m; this.n = n; }
 
 	public String getName() { return name; }
-
-	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof Node && this.name.equals(((Node)obj).name);
-	}
 }

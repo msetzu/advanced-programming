@@ -1,0 +1,6 @@
+package com.github.msetzu.pa.graph.json;
+
+public enum Token {
+	O_BRACKET, C_BRACKET, O_SQ_BRACKET, C_SQ_BRACKET, SPACES, COMMA, COLON, END,
+	NAME, FLOAT, INT, MATRIX, TYPE, TYPECASE, SHAPE, INPUT, COMP, OP, OPERATION;
+}
