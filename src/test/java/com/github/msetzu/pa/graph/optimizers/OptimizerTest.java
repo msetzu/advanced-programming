@@ -1,51 +1,15 @@
-package com.github.msetzu.pa.graph.json.factories;
+package com.github.msetzu.pa.graph.optimizers;
 
 import com.github.msetzu.pa.graph.*;
-import com.github.msetzu.pa.graph.factories.PyFactory;
-import com.github.msetzu.pa.graph.json.JSONParser;
-import com.github.msetzu.pa.graph.json.Token;
 import org.junit.Test;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
 
-public class PyFactoryTest {
+public class OptimizerTest {
 	@Test
-	public void generate() throws Exception {
-		float[][] m = new float[][]{{1, 2, 3}, {1, 2, 3}};
-		PyFactory pyFactory = new PyFactory();
-	}
-
-	@Test
-	public void testOp() {
-		PyFactory pyFactory = new PyFactory();
-		Operation opSum = Operation.SUM;
-		Operation opMul = Operation.MUL;
-		ArrayList<String> inputs = new ArrayList<>();
-
-		inputs.add("a");
-		inputs.add("b");
-		inputs.add("c");
-		inputs.add("d");
-		inputs.add("e");
-
-		/*assertEquals("a + b + c + d + e", pyFactory.operation(opSum, inputs));
-		assertEquals("numpy.matmul(numpy.matmul(numpy.matmul(numpy.matmul(a, b), c), d), e)",
-					pyFactory.operation(opMul, inputs));*/
-
-		ArrayList<String> params = new ArrayList<>();
-		params.add("a");
-		params.add("b");
-
-		ArrayList<String> params1 = new ArrayList<>();
-		params1.add("a");
-		//assertEquals("c = c_foo(a, b)\n", pyFactory.fooAssignment("c", params));
-		//assertEquals("c = c_foo(a)\n", pyFactory.fooAssignment("c", params1));
-	}
-
-	@Test
-	public void testYolo() {
+	public void optimize() throws Exception {
 		InputNode nA = new InputNode("a", 1, 1, Optional.empty());
 		InputNode nB = new InputNode("b", 1, 1, Optional.empty());
 		InputNode nC = new InputNode("c", 1, 1, Optional.empty());
@@ -103,25 +67,8 @@ public class PyFactoryTest {
 		Graph gGraph = new Graph(gRoots, gMap);
 
 
-		PyFactory pyFactory = new PyFactory();
-		//String s = pyFactory.generate(gGraph);
-
-		String testString7 = "{" +
-				"\"a\": {\"type\": \"input\", \"shape\": [1,1]}," +
-				"\"b\": {\"type\": \"input\", \"shape\": [1,1]}," +
-				"\"c\": {\"type\": \"comp\", \"op\": \"sum\", \"in\": [\"a\", \"b\"]}," +
-				"\"d\": {\"type\": \"comp\", \"op\": \"sum\", \"in\": [\"b\", [[1]]]}," +
-				"\"e\": {\"type\": \"comp\", \"op\": \"mult\", \"in\": [\"c\", \"d\"]}" +
-				"}   ";
-
-		JSONParser jp7 = new JSONParser();
-		jp7.parse(testString7);
-		Map<String, Map<Token, String>> m7 = jp7.getNodes();
-		GraphFactory gf7 = new GraphFactory();
-		Graph g7 = gf7.graph(m7).get();
-
-		pyFactory = new PyFactory();
-		String s1 = pyFactory.generate(g7);
-		
+		assertEquals(nG.inputs().size(), 2);
+		(new Optimizer()).optimize(gGraph);
 	}
+
 }

@@ -18,13 +18,6 @@ import static org.junit.Assert.*;
 public class GraphFactoryTest {
 	@Test
 	public void graph() throws Exception {
-		/*String testString1 = "{" +
-				"\"a\": {\"type\": \"input\", \"shape\": [1,1]}," +
-				"\"b\": {\"type\": \"input\", \"shape\": [1,1]}," +
-				"\"c\": {\"type\": \"comp\", \"op\": \"sum\", \"in\": [\"a\", \"b\"]}," +
-				"\"d\": {\"type\": \"comp\", \"op\": \"sum\", \"in\": [\"b\", [[1]]]}," +
-				"\"e\": {\"type\": \"comp\", \"op\": \"mult\", \"in\": [\"c\", \"d\"]}" +
-				"}   ";*/
 		String testString1 = "{" +
 				"\"a\": {\"type\": \"input\", \"shape\": [1,1]}," +
 				"\"c\": {\"type\": \"comp\", \"op\": \"sum\", \"in\": [\"a\", [[1]]]}" +
@@ -86,8 +79,7 @@ public class GraphFactoryTest {
 		assertTrue(m1.keySet().contains("c"));
 		assertFalse(m1.keySet().contains("d"));
 		assertFalse(m1.keySet().contains("e"));
-
-
+		
 		assertTrue(g1.names(g1).stream().anyMatch("a"::equals));
 		assertFalse(g1.names(g1).stream().anyMatch("b"::equals));
 		assertTrue(g1.names(g1).stream().anyMatch("c"::equals));
