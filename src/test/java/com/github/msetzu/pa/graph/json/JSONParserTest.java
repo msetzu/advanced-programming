@@ -7,7 +7,7 @@ import static org.junit.Assert.assertTrue;
 public class JSONParserTest {
 	@Test
 	public void parse() throws Exception {
-		JSONParser parser = new JSONParser();
+		JSONParser parser;
 		String testString1 = "{" +
 				"\"a\": {\"type\": \"input\", \"shape\": [1,1]}," +
 				"\"b\": {\"type\": \"input\", \"shape\": [1,1]}," +
@@ -33,35 +33,22 @@ public class JSONParserTest {
 				"\"e\": {\"type\": \"comp\", \"op\": \"mult\", \"in\": [\"c\", \"d\"]}" +
 				"}   ";
 
-
-		//System.out.println("Graph 1");
-		parser.parse(testString1);
+		
+		(new JSONParser(testString1)).parse();
 		assertTrue(true);
-		//System.out.println("\n\n\n");
-		//System.out.println("Graph 2");
-		parser.parse(testString2);
+		(new JSONParser(testString2)).parse();
 		assertTrue(true);
-		//System.out.println("\n\n\n");
-		//System.out.println("Graph 3");
-		parser.parse(testString3);
+		(new JSONParser(testString3)).parse();
 		assertTrue(true);
-		//System.out.println("\n\n\n");
-		//System.out.println("Graph 4");
 		try {
-			parser.parse(testString4);
+			(new JSONParser(testString4)).parse();
 			assertTrue(false);
-			//System.out.println("\n\n\n");
 		} catch (Exception e) {
-			//System.out.println("FAILED");
 			assertTrue(true);
-			//System.out.println("\n\n\n");
 		}
-		//System.out.println("Graph 5");
-		parser.parse(testString5);
+		(new JSONParser(testString5)).parse();
 		assertTrue(true);
-		//System.out.println("Graph 6");
-		parser.parse(testString6);
+		(new JSONParser(testString6)).parse();
 		assertTrue(true);
-		//System.out.println("\n\n\n");
 	}
 }

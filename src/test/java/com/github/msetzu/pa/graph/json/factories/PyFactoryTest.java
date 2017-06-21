@@ -114,11 +114,11 @@ public class PyFactoryTest {
 				"\"e\": {\"type\": \"comp\", \"op\": \"mult\", \"in\": [\"c\", \"d\"]}" +
 				"}   ";
 
-		JSONParser jp7 = new JSONParser();
-		jp7.parse(testString7);
+		JSONParser jp7 = new JSONParser(testString7);
+		jp7.parse();
 		Map<String, Map<Token, String>> m7 = jp7.getNodes();
-		GraphFactory gf7 = new GraphFactory();
-		Graph g7 = gf7.graph(m7).get();
+		GraphFactory gf7 = new GraphFactory(m7);
+		Graph g7 = gf7.graph().get();
 
 		pyFactory = new PyFactory();
 		String s1 = pyFactory.generate(g7);

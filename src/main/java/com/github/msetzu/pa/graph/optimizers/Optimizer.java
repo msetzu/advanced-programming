@@ -18,14 +18,15 @@ public class Optimizer {
 
 		ArrayList<Graph> boundaryGraphs = new ArrayList<>();
 		ComputationalNode compNode = (ComputationalNode) node;
-		Iterator<Graph> i = nodeGraph.childrenOf(node).stream().filter(child -> child.getRoots().get(0) instanceof ComputationalNode).iterator();
+		Iterator<Graph> i = nodeGraph.childrenOf(node).stream().filter(child -> child.getRoots().get(0)
+							instanceof ComputationalNode).iterator();
 
 		while (i.hasNext()) {
 			Graph child = i.next();
 			Node childRoot = child.getRoots().get(0);
 			ComputationalNode compChild = (ComputationalNode) childRoot;
 
-			if (!(((ComputationalNode) childRoot).operation().equals((compNode.operation())))) {
+			if (!(compChild.operation().equals((compNode.operation())))) {
 				boundaryGraphs.add(child);
 			} else {
 				int pos = compNode.inputs().indexOf(childRoot);
@@ -46,6 +47,6 @@ public class Optimizer {
 		List<Graph> followingChildren = newChildren.subList(position, newChildren.size());
 
 		return Stream.of(previousChildren, child.childrenOf(childRoot), followingChildren)
-				.flatMap(List::stream).collect(toList());
+						.flatMap(List::stream).collect(toList());
 	}
 }

@@ -15,7 +15,5 @@ public class OperationCompiler {
 		}
 	}
 
-	String val(String rawValue) {
-		return rawValue.startsWith("[") ? "numpy.matrix('" + rawValue + "')" : rawValue;
-	}
+	String val(String raw) { return raw.startsWith("[") ? "numpy.matrix('" + raw + "')" : raw; }
 }

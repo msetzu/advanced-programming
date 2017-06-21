@@ -2,7 +2,6 @@ package com.github.msetzu.pa.graph.factories;
 
 import com.github.msetzu.pa.graph.*;
 import com.github.msetzu.pa.graph.compilers.OperationCompiler;
-
 import java.util.*;
 import java.util.stream.IntStream;
 import static java.util.stream.Collectors.toList;
@@ -25,7 +24,8 @@ public class PyFactory {
 		// Assignments
 		for (int i = statements.size() - 1; i >= 0; i--) py = py.append("\t").append(statements.get(i));
 		// return
-		py = py.append("\treturn ").append("[").append(seq(roots.stream().map(Node::getName).collect(toList()))).append("]\n\n");
+		py = py.append("\treturn ").append("[").append(seq(roots.stream().map(Node::getName)
+				.collect(toList()))).append("]\n\n");
 
 		return py.toString();
 	}
@@ -38,10 +38,10 @@ public class PyFactory {
 			ComputationalNode compNode = (ComputationalNode) node;
 			List<Node> children = compNode.inputs();
 
-			statements.add(assign(name, compiler.compile(compNode, children.stream().map(Node::getName).collect(toList()))));
+			statements.add(assign(name, compiler.compile(compNode, children.stream().map(Node::getName)
+						.collect(toList()))));
 			children.forEach(this::generate);
-		} else
-			if (!(name.startsWith("["))) graphParameters.add(name);
+		} else if (!(name.startsWith("["))) graphParameters.add(name);
 
 		generatedNodes.add(node);
 	}

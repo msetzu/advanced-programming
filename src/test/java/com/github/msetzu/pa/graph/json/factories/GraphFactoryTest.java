@@ -39,40 +39,40 @@ public class GraphFactoryTest {
 				"\"e\": {\"type\": \"comp\", \"op\": \"mult\", \"in\": [\"c\", \"d\"]}" +
 				"}   ";
 		
-		JSONParser jp1 = new JSONParser();
-		jp1.parse(testString1);
+		JSONParser jp1 = new JSONParser(testString1);
+		jp1.parse();
 		Map<String, Map<Token, String>> m1 = jp1.getNodes();
-		GraphFactory gf1 = new GraphFactory();
-		Graph g1 = gf1.graph(m1).get();
+		GraphFactory gf1 = new GraphFactory(m1);
+		Graph g1 = gf1.graph().get();
 		
-		JSONParser jp2 = new JSONParser();
-		jp2.parse(testString2);
+		JSONParser jp2 = new JSONParser(testString2);
+		jp2.parse();
 		Map<String, Map<Token, String>> m2 = jp2.getNodes();
-		GraphFactory gf2 = new GraphFactory();
-		Graph g2 = gf2.graph(m2).get();
+		GraphFactory gf2 = new GraphFactory(m2);
+		Graph g2 = gf2.graph().get();
 
-		JSONParser jp3 = new JSONParser();
-		jp3.parse(testString3);
+		JSONParser jp3 = new JSONParser(testString3);
+		jp3.parse();
 		Map<String, Map<Token, String>> m3 = jp3.getNodes();
-		GraphFactory gf3 = new GraphFactory();
-		Graph g3 = gf3.graph(m3).get();
+		GraphFactory gf3 = new GraphFactory(m3);
+		Graph g3 = gf3.graph().get();
 
 		try {
-				JSONParser jp4 = new JSONParser();
-			jp4.parse(testString4);
+			JSONParser jp4 = new JSONParser(testString4);
+			jp4.parse();
 			assertTrue(false);
 		} catch (Exception e) {}
 
-		JSONParser jp5 = new JSONParser();
-		jp5.parse(testString5);
+		JSONParser jp5 = new JSONParser(testString5);
+		jp5.parse();
 		Map<String, Map<Token, String>> m5 = jp5.getNodes();
 		m5 = jp5.getNodes();
 
-		JSONParser jp6 = new JSONParser();
-		jp6.parse(testString6);
+		JSONParser jp6 = new JSONParser(testString6);
+		jp6.parse();
 		Map<String, Map<Token, String>> m6 = jp6.getNodes();
-		GraphFactory gf6 = new GraphFactory();
-		Graph g6 = gf6.graph(m6).get();
+		GraphFactory gf6 = new GraphFactory(m6);
+		Graph g6 = gf6.graph().get();
 
 		assertTrue(m1.keySet().contains("a"));
 		assertFalse(m1.keySet().contains("b"));

@@ -18,14 +18,12 @@ public class Matrix {
 		Matrix other = (Matrix) obj;
 
 		return (other.getM() == this.m && other.getN() == this.n) && IntStream.range(0, m)
-				.allMatch(row -> Arrays.equals(this.matrix[row], ((Matrix)other).matrix[row]));
+				.allMatch(row -> Arrays.equals(this.matrix[row], other.matrix[row]));
 	}
 
-	public int getM() { return m; }
+	private int getM() { return m; }
 
-	public int getN() { return n; }
+	private int getN() { return n; }
 
 	public void set(int i, int j, float e) { matrix[i][j] = e; }
-
-	public float[][] matrix() { return matrix; }
 }
