@@ -274,6 +274,8 @@ public class GraphTest {
 
 		dimensionMap = new HashMap<>();
 		for (int i = 0, k = gRoots.size(); i < k; i++) gGraph.dimensions(roots.get(i), dimensionMap);
+
+
 	}
 
 	@Test

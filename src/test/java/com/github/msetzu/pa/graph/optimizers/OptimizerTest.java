@@ -69,6 +69,13 @@ public class OptimizerTest {
 
 		assertEquals(nG.inputs().size(), 2);
 		(new Optimizer()).optimize(gGraph);
+
+		/*assertEquals((new Optimizer()).parents(nG, gGraph, new HashSet<>()).size(), 0);
+		assertEquals((new Optimizer()).parents(nE, gGraph, new HashSet<>()).size(), 1);
+		assertEquals((new Optimizer()).parents(nF, gGraph, new HashSet<>()).size(), 1);
+		assertEquals((new Optimizer()).parents(nB, gGraph, new HashSet<>()).size(), 1);
+		assertEquals((new Optimizer()).parents(nC, gGraph, new HashSet<>()).size(), 1);
+		assertEquals((new Optimizer()).parents(nA, gGraph, new HashSet<>()).size(), 2);*/
 	}
 
 }

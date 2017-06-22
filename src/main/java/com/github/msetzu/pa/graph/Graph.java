@@ -11,8 +11,6 @@ public class Graph {
 
 	public Map<Node, List<Graph>> getChildren() { return children; }
 
-	public Graph() { roots = new ArrayList<>(); children = new HashMap<>(); }
-
 	public Graph(Node root) { roots = new ArrayList<>(); roots.add(root); children = new HashMap<>(); }
 
 	public Graph(List<Node> roots) {
