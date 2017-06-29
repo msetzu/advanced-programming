@@ -1,0 +1,4 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+    \PYG{n}{sum}\PYG{o}{:} \PYG{o}{([}\PYG{n}{n}\PYG{o}{,} \PYG{n}{m}\PYG{o}{],} \PYG{o}{[}\PYG{n}{n}\PYG{o}{,} \PYG{n}{m}\PYG{o}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{o}{[}\PYG{n}{n}\PYG{o}{,} \PYG{n}{m}\PYG{o}{]}
+    \PYG{n}{mult}\PYG{o}{:} \PYG{o}{([}\PYG{n}{n}\PYG{o}{,} \PYG{n}{m}\PYG{o}{],} \PYG{o}{[}\PYG{n}{m}\PYG{o}{,} \PYG{n}{k}\PYG{o}{])} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{o}{[}\PYG{n}{n}\PYG{o}{,} \PYG{n}{k}\PYG{o}{]}
+\end{Verbatim}

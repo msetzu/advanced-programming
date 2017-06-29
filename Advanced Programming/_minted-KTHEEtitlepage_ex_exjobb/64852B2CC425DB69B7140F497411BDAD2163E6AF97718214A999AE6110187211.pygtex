@@ -1,0 +1,23 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph.compilers}\PYG{o}{;}
+
+\PYG{k+kn}{import} \PYG{n+nn}{com.github.msetzu.pa.graph.ComputationalNode}\PYG{o}{;}
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.List}\PYG{o}{;}
+
+\PYG{c+c1}{// Compile the suited statement according to the operation}
+\PYG{k+kd}{public} \PYG{k+kd}{class} \PYG{n+nc}{OperationCompiler} \PYG{o}{\PYGZob{}}
+	\PYG{k+kd}{private} \PYG{n}{SumCompiler} \PYG{n}{sumCompiler} \PYG{o}{=} \PYG{k}{new} \PYG{n}{SumCompiler}\PYG{o}{();}
+	\PYG{k+kd}{private} \PYG{n}{MulCompiler} \PYG{n}{mulCompiler} \PYG{o}{=} \PYG{k}{new} \PYG{n}{MulCompiler}\PYG{o}{();}
+
+	\PYG{k+kd}{public} \PYG{n}{String} \PYG{n+nf}{compile}\PYG{o}{(}\PYG{n}{ComputationalNode} \PYG{n}{node}\PYG{o}{,} \PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{operands}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k}{switch} \PYG{o}{(}\PYG{n}{node}\PYG{o}{.}\PYG{n+na}{operation}\PYG{o}{())} \PYG{o}{\PYGZob{}}
+			\PYG{k}{case} \PYG{n}{SUM}\PYG{o}{:} \PYG{k}{return} \PYG{n}{sumCompiler}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{n}{operands}\PYG{o}{);}
+			\PYG{k}{default}\PYG{o}{:} \PYG{k}{return} \PYG{n}{mulCompiler}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{n}{operands}\PYG{o}{);}
+		\PYG{o}{\PYGZcb{}}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{n}{String} \PYG{n+nf}{val}\PYG{o}{(}\PYG{n}{String} \PYG{n}{rawValue}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k}{return} \PYG{n}{rawValue}\PYG{o}{.}\PYG{n+na}{startsWith}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}[\PYGZdq{}}\PYG{o}{)} \PYG{o}{?} \PYG{l+s}{\PYGZdq{}numpy.matrix(\PYGZsq{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{rawValue} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZsq{})\PYGZdq{}} \PYG{o}{:} \PYG{n}{rawValue}\PYG{o}{;}
+	\PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,9 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph.json}\PYG{o}{;}
+
+\PYG{c+c1}{// Tokens met in the JSON files}
+\PYG{k+kd}{public} \PYG{k+kd}{enum} \PYG{n}{Token} \PYG{o}{\PYGZob{}}
+	\PYG{n}{O\PYGZus{}BRACKET}\PYG{o}{,} \PYG{n}{C\PYGZus{}BRACKET}\PYG{o}{,} \PYG{n}{O\PYGZus{}SQ\PYGZus{}BRACKET}\PYG{o}{,} \PYG{n}{C\PYGZus{}SQ\PYGZus{}BRACKET}\PYG{o}{,} \PYG{n}{SPACES}\PYG{o}{,} \PYG{n}{COMMA}\PYG{o}{,} \PYG{n}{COLON}\PYG{o}{,} \PYG{n}{END}\PYG{o}{,}
+	\PYG{n}{NAME}\PYG{o}{,} \PYG{n}{FLOAT}\PYG{o}{,} \PYG{n}{INT}\PYG{o}{,} \PYG{n}{MATRIX}\PYG{o}{,} \PYG{n}{TYPE}\PYG{o}{,} \PYG{n}{TYPECASE}\PYG{o}{,} \PYG{n}{SHAPE}\PYG{o}{,} \PYG{n}{INPUT}\PYG{o}{,} \PYG{n}{COMP}\PYG{o}{,} \PYG{n}{OP}\PYG{o}{,} \PYG{n}{OPERATION}\PYG{o}{;}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

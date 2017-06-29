@@ -1,0 +1,59 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph.factories}\PYG{o}{;}
+
+\PYG{k+kn}{import} \PYG{n+nn}{com.github.msetzu.pa.graph.*}\PYG{o}{;}
+\PYG{k+kn}{import} \PYG{n+nn}{com.github.msetzu.pa.graph.compilers.OperationCompiler}\PYG{o}{;}
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.*}\PYG{o}{;}
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.stream.IntStream}\PYG{o}{;}
+\PYG{k+kn}{import static} \PYG{n+nn}{java.util.stream.Collectors.toList}\PYG{o}{;}
+
+\PYG{k+kd}{public} \PYG{k+kd}{class} \PYG{n+nc}{PyFactory} \PYG{o}{\PYGZob{}}
+	\PYG{k+kd}{private} \PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{statements} \PYG{o}{=} \PYG{k}{new} \PYG{n}{ArrayList}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+	\PYG{k+kd}{private} \PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{graphParameters} \PYG{o}{=} \PYG{k}{new} \PYG{n}{ArrayList}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+	\PYG{k+kd}{private} \PYG{n}{StringBuilder} \PYG{n}{py} \PYG{o}{=} \PYG{k}{new} \PYG{n}{StringBuilder}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{);}
+	\PYG{k+kd}{private} \PYG{n}{Set}\PYG{o}{\PYGZlt{}}\PYG{n}{Node}\PYG{o}{\PYGZgt{}} \PYG{n}{generatedNodes} \PYG{o}{=} \PYG{k}{new} \PYG{n}{HashSet}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+	\PYG{k+kd}{private} \PYG{n}{OperationCompiler} \PYG{n}{compiler} \PYG{o}{=} \PYG{k}{new} \PYG{n}{OperationCompiler}\PYG{o}{();}
+
+	\PYG{k+kd}{public} \PYG{n}{String} \PYG{n+nf}{generate}\PYG{o}{(}\PYG{n}{Graph} \PYG{n}{g}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Node}\PYG{o}{\PYGZgt{}} \PYG{n}{roots} \PYG{o}{=} \PYG{n}{g}\PYG{o}{.}\PYG{n+na}{getRoots}\PYG{o}{();}
+		\PYG{n}{roots}\PYG{o}{.}\PYG{n+na}{forEach}\PYG{o}{(}\PYG{k}{this}\PYG{o}{::}\PYG{n}{generate}\PYG{o}{);}
+
+		\PYG{n}{py} \PYG{o}{=} \PYG{n}{py}\PYG{o}{.}\PYG{n+na}{append}\PYG{o}{(}\PYG{n}{header}\PYG{o}{());}
+		\PYG{n}{IntStream}\PYG{o}{.}\PYG{n+na}{range}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{,} \PYG{n}{graphParameters}\PYG{o}{.}\PYG{n+na}{size}\PYG{o}{()).}\PYG{n+na}{forEach}\PYG{o}{(}\PYG{n}{i} \PYG{o}{\PYGZhy{}\PYGZgt{}}
+						\PYG{n}{py} \PYG{o}{=} \PYG{n}{py}\PYG{o}{.}\PYG{n+na}{append}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZbs{}t\PYGZdq{}}\PYG{o}{).}\PYG{n+na}{append}\PYG{o}{(}\PYG{n}{graphParameters}\PYG{o}{.}\PYG{n+na}{get}\PYG{o}{(}\PYG{n}{i}\PYG{o}{))}
+							\PYG{o}{.}\PYG{n+na}{append}\PYG{o}{(}\PYG{l+s}{\PYGZdq{} = numpy.matrix(sys.argv[\PYGZdq{}}\PYG{o}{).}\PYG{n+na}{append}\PYG{o}{(}\PYG{n}{i} \PYG{o}{+} \PYG{l+m+mi}{1}\PYG{o}{).}\PYG{n+na}{append}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}])\PYGZbs{}n\PYGZdq{}}\PYG{o}{));}
+		\PYG{c+c1}{// Assignments}
+		\PYG{k}{for} \PYG{o}{(}\PYG{k+kt}{int} \PYG{n}{i} \PYG{o}{=} \PYG{n}{statements}\PYG{o}{.}\PYG{n+na}{size}\PYG{o}{()} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{1}\PYG{o}{;} \PYG{n}{i} \PYG{o}{\PYGZgt{}=} \PYG{l+m+mi}{0}\PYG{o}{;} \PYG{n}{i}\PYG{o}{\PYGZhy{}\PYGZhy{})} \PYG{n}{py} \PYG{o}{=} \PYG{n}{py}\PYG{o}{.}\PYG{n+na}{append}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZbs{}t\PYGZdq{}}\PYG{o}{).}\PYG{n+na}{append}\PYG{o}{(}\PYG{n}{statements}\PYG{o}{.}\PYG{n+na}{get}\PYG{o}{(}\PYG{n}{i}\PYG{o}{));}
+		\PYG{c+c1}{// return}
+		\PYG{n}{py} \PYG{o}{=} \PYG{n}{py}\PYG{o}{.}\PYG{n+na}{append}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZbs{}treturn \PYGZdq{}}\PYG{o}{).}\PYG{n+na}{append}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}[\PYGZdq{}}\PYG{o}{).}\PYG{n+na}{append}\PYG{o}{(}\PYG{n}{seq}\PYG{o}{(}\PYG{n}{roots}\PYG{o}{.}\PYG{n+na}{stream}\PYG{o}{().}\PYG{n+na}{map}\PYG{o}{(}\PYG{n}{Node}\PYG{o}{::}\PYG{n}{getName}\PYG{o}{)}
+				\PYG{o}{.}\PYG{n+na}{collect}\PYG{o}{(}\PYG{n}{toList}\PYG{o}{()))).}\PYG{n+na}{append}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}]\PYGZbs{}n\PYGZbs{}n\PYGZdq{}}\PYG{o}{);}
+
+		\PYG{k}{return} \PYG{n}{py}\PYG{o}{.}\PYG{n+na}{toString}\PYG{o}{();}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{k+kt}{void} \PYG{n+nf}{generate}\PYG{o}{(}\PYG{n}{Node} \PYG{n}{node}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k}{if} \PYG{o}{(}\PYG{n}{generatedNodes}\PYG{o}{.}\PYG{n+na}{contains}\PYG{o}{(}\PYG{n}{node}\PYG{o}{))} \PYG{k}{return}\PYG{o}{;}
+		\PYG{n}{String} \PYG{n}{name} \PYG{o}{=} \PYG{n}{node}\PYG{o}{.}\PYG{n+na}{getName}\PYG{o}{();}
+
+		\PYG{k}{if} \PYG{o}{(}\PYG{n}{node} \PYG{k}{instanceof} \PYG{n}{ComputationalNode}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+			\PYG{n}{ComputationalNode} \PYG{n}{compNode} \PYG{o}{=} \PYG{o}{(}\PYG{n}{ComputationalNode}\PYG{o}{)} \PYG{n}{node}\PYG{o}{;}
+			\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Node}\PYG{o}{\PYGZgt{}} \PYG{n}{children} \PYG{o}{=} \PYG{n}{compNode}\PYG{o}{.}\PYG{n+na}{inputs}\PYG{o}{();}
+
+			\PYG{n}{statements}\PYG{o}{.}\PYG{n+na}{add}\PYG{o}{(}\PYG{n}{assign}\PYG{o}{(}\PYG{n}{name}\PYG{o}{,} \PYG{n}{compiler}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{n}{compNode}\PYG{o}{,} \PYG{n}{children}\PYG{o}{.}\PYG{n+na}{stream}\PYG{o}{().}\PYG{n+na}{map}\PYG{o}{(}\PYG{n}{Node}\PYG{o}{::}\PYG{n}{getName}\PYG{o}{)}
+						\PYG{o}{.}\PYG{n+na}{collect}\PYG{o}{(}\PYG{n}{toList}\PYG{o}{()))));}
+			\PYG{n}{children}\PYG{o}{.}\PYG{n+na}{forEach}\PYG{o}{(}\PYG{k}{this}\PYG{o}{::}\PYG{n}{generate}\PYG{o}{);}
+		\PYG{o}{\PYGZcb{}} \PYG{k}{else} \PYG{k}{if} \PYG{o}{(!(}\PYG{n}{name}\PYG{o}{.}\PYG{n+na}{startsWith}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}[\PYGZdq{}}\PYG{o}{)))} \PYG{n}{graphParameters}\PYG{o}{.}\PYG{n+na}{add}\PYG{o}{(}\PYG{n}{name}\PYG{o}{);}
+
+		\PYG{n}{generatedNodes}\PYG{o}{.}\PYG{n+na}{add}\PYG{o}{(}\PYG{n}{node}\PYG{o}{);}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{n}{String} \PYG{n+nf}{header}\PYG{o}{()} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{l+s}{\PYGZdq{}import numpy\PYGZbs{}n\PYGZbs{}nif \PYGZus{}\PYGZus{}name\PYGZus{}\PYGZus{} == \PYGZbs{}\PYGZdq{}\PYGZus{}\PYGZus{}main\PYGZus{}\PYGZus{}\PYGZbs{}\PYGZdq{}:\PYGZbs{}n\PYGZdq{}}\PYG{o}{;} \PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{n}{String} \PYG{n+nf}{assign}\PYG{o}{(}\PYG{n}{String} \PYG{n}{name}\PYG{o}{,} \PYG{n}{String} \PYG{n}{val}\PYG{o}{)} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{n}{name} \PYG{o}{+} \PYG{l+s}{\PYGZdq{} = \PYGZdq{}} \PYG{o}{+} \PYG{n}{val} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}n\PYGZdq{}}\PYG{o}{;} \PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{n}{String} \PYG{n+nf}{seq}\PYG{o}{(}\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{elements}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{n}{String} \PYG{n}{s} \PYG{o}{=} \PYG{n}{elements}\PYG{o}{.}\PYG{n+na}{stream}\PYG{o}{().}\PYG{n+na}{map}\PYG{o}{(}\PYG{n}{p} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{p} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}, \PYGZdq{}}\PYG{o}{).}\PYG{n+na}{reduce}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{,} \PYG{n}{String}\PYG{o}{::}\PYG{n}{concat}\PYG{o}{);}
+		\PYG{k}{return} \PYG{n}{s}\PYG{o}{.}\PYG{n+na}{substring}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{,} \PYG{n}{s}\PYG{o}{.}\PYG{n+na}{length}\PYG{o}{()} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{2}\PYG{o}{);}
+	\PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

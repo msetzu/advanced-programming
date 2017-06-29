@@ -1,0 +1,31 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph}\PYG{o}{;}
+
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.Arrays}\PYG{o}{;}
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.stream.IntStream}\PYG{o}{;}
+
+\PYG{k+kd}{public} \PYG{k+kd}{class} \PYG{n+nc}{Matrix} \PYG{o}{\PYGZob{}}
+	\PYG{k+kd}{private} \PYG{k+kd}{final} \PYG{k+kt}{float}\PYG{o}{[][]} \PYG{n}{matrix}\PYG{o}{;}
+	\PYG{k+kd}{private} \PYG{k+kd}{final} \PYG{k+kt}{int} \PYG{n}{m}\PYG{o}{;}
+	\PYG{k+kd}{private} \PYG{k+kd}{final} \PYG{k+kt}{int} \PYG{n}{n}\PYG{o}{;}
+
+	\PYG{k+kd}{public} \PYG{n+nf}{Matrix}\PYG{o}{(}\PYG{k+kt}{int} \PYG{n}{m}\PYG{o}{,} \PYG{k+kt}{int} \PYG{n}{n}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k}{this}\PYG{o}{.}\PYG{n+na}{matrix} \PYG{o}{=} \PYG{k}{new} \PYG{k+kt}{float}\PYG{o}{[}\PYG{n}{m}\PYG{o}{][}\PYG{n}{n}\PYG{o}{];} \PYG{k}{this}\PYG{o}{.}\PYG{n+na}{m} \PYG{o}{=} \PYG{n}{m}\PYG{o}{;} \PYG{k}{this}\PYG{o}{.}\PYG{n+na}{n} \PYG{o}{=} \PYG{n}{n}\PYG{o}{;}
+		\PYG{n}{IntStream}\PYG{o}{.}\PYG{n+na}{range}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{,}\PYG{n}{m}\PYG{o}{).}\PYG{n+na}{forEach}\PYG{o}{(}\PYG{n}{row} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Arrays}\PYG{o}{.}\PYG{n+na}{fill}\PYG{o}{(}\PYG{n}{matrix}\PYG{o}{[}\PYG{n}{row}\PYG{o}{],} \PYG{l+m+mi}{0}\PYG{o}{));}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{public} \PYG{k+kt}{boolean} \PYG{n+nf}{equals}\PYG{o}{(}\PYG{n}{Object} \PYG{n}{obj}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k}{if} \PYG{o}{(!(}\PYG{n}{obj} \PYG{k}{instanceof} \PYG{n}{Matrix}\PYG{o}{))} \PYG{k}{return} \PYG{k+kc}{false}\PYG{o}{;}
+		\PYG{n}{Matrix} \PYG{n}{other} \PYG{o}{=} \PYG{o}{(}\PYG{n}{Matrix}\PYG{o}{)} \PYG{n}{obj}\PYG{o}{;}
+
+		\PYG{k}{return} \PYG{o}{(}\PYG{n}{other}\PYG{o}{.}\PYG{n+na}{getM}\PYG{o}{()} \PYG{o}{==} \PYG{k}{this}\PYG{o}{.}\PYG{n+na}{m} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{other}\PYG{o}{.}\PYG{n+na}{getN}\PYG{o}{()} \PYG{o}{==} \PYG{k}{this}\PYG{o}{.}\PYG{n+na}{n}\PYG{o}{)} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{IntStream}\PYG{o}{.}\PYG{n+na}{range}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{,} \PYG{n}{m}\PYG{o}{)}
+				\PYG{o}{.}\PYG{n+na}{allMatch}\PYG{o}{(}\PYG{n}{row} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{Arrays}\PYG{o}{.}\PYG{n+na}{equals}\PYG{o}{(}\PYG{k}{this}\PYG{o}{.}\PYG{n+na}{matrix}\PYG{o}{[}\PYG{n}{row}\PYG{o}{],} \PYG{n}{other}\PYG{o}{.}\PYG{n+na}{matrix}\PYG{o}{[}\PYG{n}{row}\PYG{o}{]));}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{k+kt}{int} \PYG{n+nf}{getM}\PYG{o}{()} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{n}{m}\PYG{o}{;} \PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{k+kt}{int} \PYG{n+nf}{getN}\PYG{o}{()} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{n}{n}\PYG{o}{;} \PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{public} \PYG{k+kt}{void} \PYG{n+nf}{set}\PYG{o}{(}\PYG{k+kt}{int} \PYG{n}{i}\PYG{o}{,} \PYG{k+kt}{int} \PYG{n}{j}\PYG{o}{,} \PYG{k+kt}{float} \PYG{n}{e}\PYG{o}{)} \PYG{o}{\PYGZob{}} \PYG{n}{matrix}\PYG{o}{[}\PYG{n}{i}\PYG{o}{][}\PYG{n}{j}\PYG{o}{]} \PYG{o}{=} \PYG{n}{e}\PYG{o}{;} \PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

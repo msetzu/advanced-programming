@@ -1,0 +1,160 @@
+\documentclass[10pt, a4paper]{article}
+
+\usepackage[eng,exjobb]{KTHEEtitlepage}
+\usepackage[cp1252]{inputenc}
+\usepackage{sectsty}
+\usepackage{titlesec}
+\usepackage[margin=.8in]{geometry}
+\usepackage[obeyspaces,spaces]{url}
+\usepackage{svg}
+\usepackage{listings}
+\usepackage{minted}
+\usepackage{charter}
+
+\definecolor{bl}{RGB}{19,65,107}
+\definecolor{rd}{RGB}{163,54,67}
+\newcommand{\file}[1]{{\color{bl}\underline{{\footnotesize \path{#1}}}}}
+\newcommand{\code}[1]{{\color{bl}\texttt{#1}}}
+
+\titleformat{\section} {\bfseries\scshape\color{bl}}{}{}{}
+\titleformat{\subsection} {\bfseries\scshape\color{bl}}{}{}{}
+
+\begin{document}
+    \ititle{Advanced Programming}
+    \isubtitle{Final term paper submission}
+    \idate{June 2017}
+    %\irefnr{TRITA-EE 2006:666}
+    \iauthor{Mattia Setzu, 544666}
+    \makeititle
+
+    \section*{Implementation}
+    The following implementation models the problem as following: \emph{i)} nodes are modelled by \emph{Node}, \emph{ComputationalNode} and \emph{InputNode}, the last one implementing pure values (i.e. pure matrices) too; \emph{ii)} a node is a mapping from a name to a value (input) or an operation (computational), enriched by an input ordered set; \emph{iii)} operations are disjoint from nodes, hence should be modelled in separate classes (\emph{Operation}); \emph{iv)} the code and graph generators (\emph{PyFactory}, \emph{GraphFactory}) receive well-formed graphs.
+    We add the web references at the end of this introductory page
+    \footnote{https://stackoverflow.com/questions/27677256/java-8-streams-to-find-the-duplicate-elements,
+		 		http://json.org
+    			https://stackoverflow.com/questions/12643009/regular-expression-for-floating-point-numbers
+    			http://www.adam-bien.com/roller/abien/entry/java\_8\_streaming\_a\_string
+    			https://stackoverflow.com/questions/34879086/java-8-stream-api-filter-on-instance-and-cast}.
+
+    \section{Exercise 1}
+    Design a hierarchy of classes to represent nodes and graph objects.
+    The classes should provide suitable constructors for building nodes and graphs.
+    
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.Node.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/Node.java}
+    
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.ComputationalNode.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/ComputationalNode.java}
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.InputNode.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/InputNode.java}
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.Matrix.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/Matrix.java}
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.Operation.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/Operation.java}
+    
+    
+    \section{Exercise 2}
+    Implement a recursive descent parser, which takes a JSON representation of a graph and builds the corresponding graph. For example, the above computational graph is represented as \textbf{[..]}.
+       
+    \begin{minted}[tabsize=2, fontsize=\small]{javascript}
+    { "a": {"type": "input", "shape": [1,1]},
+    "b": {"type": "input", "shape": [1,1]},
+    "c": {"type": "comp", "op": "sum", "in": ["a", "b"]},
+    "d": {"type": "comp", "op": "sum", "in": ["b", [[1]]]},
+    "e": {"type": "comp", "op": "mult", "in": ["c", "d"]}}
+    \end{minted}
+    
+    Notice that not all the operations are possible, for example summing two vectors of different shapes.
+    The Graph class should provide the methods: isDAG, and isValid to check whether all the variables are defined and if all the operations are computable.
+    For checking the compatibility, there should be a table specifying the signature for each function, for example:
+    \begin{minted}[tabsize=2, fontsize=\small]{ocaml}
+    sum: ([n, m], [n, m]) -> [n, m]
+    mult: ([n, m], [m, k]) -> [n, k]
+    \end{minted}
+
+    \paragraph{De-coupling} In order to de-couple the graph from the operations, we provide the validity constraints on the enumeration holding the operation themselves: we trivially check for dimension correspondence.
+    An intermediate representation of the graph is stored in the map nodes in the form \code{name -> {TYPECASE -> "INPUT|COMP", SHAPE -> "m,n"}, ...}.
+    Such representation is then accessed by \code{GraphFactory} to generate the graph.
+    \vspace{2mm}
+    
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.json.Token.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/json/Token.java}
+    
+    
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.Operation.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/Operation.java}
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.json.JSONParser.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/json/JSONParser.java}
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.json.factories.GraphFactory.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/json/factories/GraphFactory.java}
+    
+    \section{Exercise 3}
+    Use polymorphism to implement a compiler that transforms a graph into executable code in a programming language.
+    Use a template for each function, that represents the code to be generated for the body of the function.
+    The resulting code should correspond to a function, which takes as arguments variables corresponding to the inputs of the graph and returns an array with all the outputs of the graph.
+    Provide the code generated for the example in the Introduction.
+
+    \paragraph{Polymorphism} We built the program on a top-down approach: starting from the top we add the statements necessary to build the current node based on its operation: in order to do so we delegate to our \code{OperationCompiler} implementation to whom we provide the node.
+    We abstract over the operations by providing a general \code{OperationCompiler}  that acts as an hub for the various compilers.  
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.factories.PyFactory.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/factories/PyFactory.java}
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.compilers.OperationCompiler.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/compilers/OperationCompiler.java}
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.compilers.SumCompiler.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/compilers/SumCompiler.java}
+
+\file{file: ./final/src/main/java/com.github.msetzu.pa.graph.compilers.MulCompiler.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/compilers/MulCompiler.java}
+
+\subsection{Generated code}
+\begin{minted}[tabsize=1,fontsize=\small]{python}
+import numpy
+
+if __name__ == "__main__":
+	a = numpy.matrix(sys.argv[1])
+	b = numpy.matrix(sys.argv[2])
+	d = b + numpy.matrix('[[1]]')
+	c = a + b
+	e = numpy.matmul(c, d)
+	return [e]
+\end{minted}
+    
+    
+    \section{Exercise 4}
+    Extend the code generator in order to perform code optimizations.
+    In particular, the generator should identify cases where multiple operations can be fused into one, for example: should be compiled into code that performs the addition a + b + c with a single nested loop.
+    \emph{Hint: use a template to represent the transformation.}
+    
+    \paragraph{Algorithm} We implement a top-down optimization algorithm similar to the processing phase of the Dijkstra min-distance: starting from the top, we split the lower nodes in two sections: boundary and not boundary, that is the immediate children and not immediate children.
+    Then we merge the boundary nodes through \code{merge(node, graph)} whenever possible and advance the boundary recursively until we reach the bottom (the input nodes).
+    
+\file{file: ./final/src/main/java/com/github/msetzu/pa/graph/optimizers/Optimizer.java}
+\inputminted[tabsize=1,fontsize=\small]{java}{./final/src/main/java/com/github/msetzu/pa/graph/optimizers/Optimizer.java}
+    
+    \section{Exercise 5}
+        
+    \paragraph{C++ templates}\emph{C++} allows the definition of dependent types, i.e. types defined w.r.t. parametric values.
+    This technique is aimed at generating suitable code (at least) partially evaluated at compile time.
+    By inserting statically-known values to the template we leverage the compile-time speed and provide a concrete model on which the compiler can optimize through static analysis.
+    It is then trivial to show how this technique comes in handy the closer the input values are to the template ones: the lesser the distance, the lesser the run-time computation.
+    On the other hand, to find the model closest to the run time inputs is often a non-trivial task, and lowers the generality of the overall program.
+    
+    \paragraph{LINQ expression trees} LINQ is a \emph{.NET} component exploiting expression trees to abstract over structured data modelled in a non-Object Oriented fashion, providing easier integration.
+    Common data models are xml files, databases and objects.
+    Possible expressions include \code{select}, \code{where}, \code{sum}, \code{avg}, \code{join} and \code{foreach} to allow iteration.
+    Set operators are provided, such as \code{intersect}, \code{union}, etc.
+    Operators are composed and built through lambda expressions implemented with the parametric type \code{Expression<T>}} and stored by the platform in efficient in-memory data structures, the expression trees.
+	Then it is trivial to compute over the above data models through the abstraction layer provided by \emph{.NET}.
+    Moreover, \emph{LINQ} is enriched by a type-inference tool, hence is able to infer and assign types to expression to/from the supported data models.
+    By typing structured untyped data we are able to guarantee some constraints on type safety on the input data.
+    We may also declare new structures and create anonymous ones to use in throw-away computations: such anonymous types are also automatically enriched with common methods (get, set, etc.)
+\end{document}

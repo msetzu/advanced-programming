@@ -1,0 +1,66 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph.optimizers}\PYG{o}{;}
+
+\PYG{k+kn}{import} \PYG{n+nn}{com.github.msetzu.pa.graph.*}\PYG{o}{;}
+
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.*}\PYG{o}{;}
+
+\PYG{k+kn}{import static} \PYG{n+nn}{java.util.stream.Collectors.toList}\PYG{o}{;}
+\PYG{k+kn}{import static} \PYG{n+nn}{java.util.stream.Collectors.toSet}\PYG{o}{;}
+
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.stream.Stream}\PYG{o}{;}
+
+\PYG{k+kd}{public} \PYG{k+kd}{class} \PYG{n+nc}{Optimizer} \PYG{o}{\PYGZob{}}
+	\PYG{k+kd}{public} \PYG{n}{Graph} \PYG{n+nf}{optimize}\PYG{o}{(}\PYG{n}{Graph} \PYG{n}{g}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{n}{g}\PYG{o}{.}\PYG{n+na}{getRoots}\PYG{o}{().}\PYG{n+na}{forEach}\PYG{o}{(}\PYG{n}{root} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{optimize}\PYG{o}{(}\PYG{n}{root}\PYG{o}{,} \PYG{n}{g}\PYG{o}{,} \PYG{n}{g}\PYG{o}{));}
+		\PYG{k}{return} \PYG{n}{g}\PYG{o}{;}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{k+kt}{void} \PYG{n+nf}{optimize}\PYG{o}{(}\PYG{n}{Node} \PYG{n}{node}\PYG{o}{,} \PYG{n}{Graph} \PYG{n}{nodeGraph}\PYG{o}{,} \PYG{n}{Graph} \PYG{n}{g}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k}{if} \PYG{o}{(}\PYG{n}{node} \PYG{k}{instanceof} \PYG{n}{InputNode}\PYG{o}{)} \PYG{k}{return}\PYG{o}{;}
+
+		\PYG{n}{ArrayList}\PYG{o}{\PYGZlt{}}\PYG{n}{Graph}\PYG{o}{\PYGZgt{}} \PYG{n}{boundaryGraphs} \PYG{o}{=} \PYG{k}{new} \PYG{n}{ArrayList}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+		\PYG{n}{ComputationalNode} \PYG{n}{compNode} \PYG{o}{=} \PYG{o}{(}\PYG{n}{ComputationalNode}\PYG{o}{)} \PYG{n}{node}\PYG{o}{;}
+		\PYG{n}{Iterator}\PYG{o}{\PYGZlt{}}\PYG{n}{Graph}\PYG{o}{\PYGZgt{}} \PYG{n}{i} \PYG{o}{=} \PYG{n}{nodeGraph}\PYG{o}{.}\PYG{n+na}{childrenOf}\PYG{o}{(}\PYG{n}{node}\PYG{o}{).}\PYG{n+na}{stream}\PYG{o}{().}\PYG{n+na}{filter}\PYG{o}{(}\PYG{n}{child} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{child}\PYG{o}{.}\PYG{n+na}{getRoots}\PYG{o}{().}\PYG{n+na}{get}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{)}
+							\PYG{k}{instanceof} \PYG{n}{ComputationalNode}\PYG{o}{).}\PYG{n+na}{iterator}\PYG{o}{();}
+
+		\PYG{k}{while} \PYG{o}{(}\PYG{n}{i}\PYG{o}{.}\PYG{n+na}{hasNext}\PYG{o}{())} \PYG{o}{\PYGZob{}}
+			\PYG{n}{Graph} \PYG{n}{child} \PYG{o}{=} \PYG{n}{i}\PYG{o}{.}\PYG{n+na}{next}\PYG{o}{();}
+			\PYG{n}{Node} \PYG{n}{childRoot} \PYG{o}{=} \PYG{n}{child}\PYG{o}{.}\PYG{n+na}{getRoots}\PYG{o}{().}\PYG{n+na}{get}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{);}
+			\PYG{n}{ComputationalNode} \PYG{n}{compChild} \PYG{o}{=} \PYG{o}{(}\PYG{n}{ComputationalNode}\PYG{o}{)} \PYG{n}{childRoot}\PYG{o}{;}
+
+			\PYG{k}{if} \PYG{o}{(!(}\PYG{n}{compChild}\PYG{o}{.}\PYG{n+na}{operation}\PYG{o}{().}\PYG{n+na}{equals}\PYG{o}{((}\PYG{n}{compNode}\PYG{o}{.}\PYG{n+na}{operation}\PYG{o}{()))))} \PYG{o}{\PYGZob{}}
+				\PYG{n}{boundaryGraphs}\PYG{o}{.}\PYG{n+na}{add}\PYG{o}{(}\PYG{n}{child}\PYG{o}{);}
+			\PYG{o}{\PYGZcb{}} \PYG{k}{else} \PYG{k}{if} \PYG{o}{(}\PYG{n}{parents}\PYG{o}{(}\PYG{n}{childRoot}\PYG{o}{,} \PYG{n}{g}\PYG{o}{,} \PYG{k}{new} \PYG{n}{HashSet}\PYG{o}{\PYGZlt{}\PYGZgt{}()).}\PYG{n+na}{size}\PYG{o}{()} \PYG{o}{==} \PYG{l+m+mi}{1}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+				\PYG{k+kt}{int} \PYG{n}{pos} \PYG{o}{=} \PYG{n}{compNode}\PYG{o}{.}\PYG{n+na}{inputs}\PYG{o}{().}\PYG{n+na}{indexOf}\PYG{o}{(}\PYG{n}{childRoot}\PYG{o}{);}
+
+				\PYG{n}{compNode}\PYG{o}{.}\PYG{n+na}{inputs}\PYG{o}{().}\PYG{n+na}{remove}\PYG{o}{(}\PYG{n}{pos}\PYG{o}{);}						\PYG{c+c1}{// Remove old child}
+				\PYG{n}{compNode}\PYG{o}{.}\PYG{n+na}{inputs}\PYG{o}{().}\PYG{n+na}{addAll}\PYG{o}{(}\PYG{n}{pos}\PYG{o}{,} \PYG{n}{compChild}\PYG{o}{.}\PYG{n+na}{inputs}\PYG{o}{());}	\PYG{c+c1}{// Replace with its children}
+				\PYG{n}{nodeGraph}\PYG{o}{.}\PYG{n+na}{getChildren}\PYG{o}{().}\PYG{n+na}{get}\PYG{o}{(}\PYG{n}{compNode}\PYG{o}{).}\PYG{n+na}{remove}\PYG{o}{(}\PYG{n}{pos}\PYG{o}{);}							\PYG{c+c1}{// Remove old graph}
+				\PYG{n}{nodeGraph}\PYG{o}{.}\PYG{n+na}{getChildren}\PYG{o}{().}\PYG{n+na}{put}\PYG{o}{(}\PYG{n}{compNode}\PYG{o}{,} \PYG{n}{merge}\PYG{o}{(}\PYG{n}{node}\PYG{o}{,} \PYG{n}{nodeGraph}\PYG{o}{,} \PYG{n}{child}\PYG{o}{,} \PYG{n}{pos}\PYG{o}{));}	\PYG{c+c1}{// Replace with its children}
+			\PYG{o}{\PYGZcb{}}
+			\PYG{n}{boundaryGraphs}\PYG{o}{.}\PYG{n+na}{forEach}\PYG{o}{(}\PYG{n}{boundary} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{optimize}\PYG{o}{(}\PYG{n}{childRoot}\PYG{o}{,} \PYG{n}{child}\PYG{o}{,} \PYG{n}{g}\PYG{o}{));}
+		\PYG{o}{\PYGZcb{}}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Graph}\PYG{o}{\PYGZgt{}} \PYG{n+nf}{merge}\PYG{o}{(}\PYG{n}{Node} \PYG{n}{parent}\PYG{o}{,} \PYG{n}{Graph} \PYG{n}{graph}\PYG{o}{,} \PYG{n}{Graph} \PYG{n}{child}\PYG{o}{,} \PYG{k+kt}{int} \PYG{n}{position}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{n}{Node} \PYG{n}{childRoot} \PYG{o}{=} \PYG{n}{child}\PYG{o}{.}\PYG{n+na}{getRoots}\PYG{o}{().}\PYG{n+na}{get}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{);}
+		\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Graph}\PYG{o}{\PYGZgt{}} \PYG{n}{newChildren} \PYG{o}{=} \PYG{n}{graph}\PYG{o}{.}\PYG{n+na}{getChildren}\PYG{o}{().}\PYG{n+na}{get}\PYG{o}{(}\PYG{n}{parent}\PYG{o}{);}
+		\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Graph}\PYG{o}{\PYGZgt{}} \PYG{n}{previousChildren} \PYG{o}{=} \PYG{n}{newChildren}\PYG{o}{.}\PYG{n+na}{subList}\PYG{o}{(}\PYG{l+m+mi}{0}\PYG{o}{,} \PYG{n}{position}\PYG{o}{);}
+		\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Graph}\PYG{o}{\PYGZgt{}} \PYG{n}{followingChildren} \PYG{o}{=} \PYG{n}{newChildren}\PYG{o}{.}\PYG{n+na}{subList}\PYG{o}{(}\PYG{n}{position}\PYG{o}{,} \PYG{n}{newChildren}\PYG{o}{.}\PYG{n+na}{size}\PYG{o}{());}
+
+		\PYG{k}{return} \PYG{n}{Stream}\PYG{o}{.}\PYG{n+na}{of}\PYG{o}{(}\PYG{n}{previousChildren}\PYG{o}{,} \PYG{n}{child}\PYG{o}{.}\PYG{n+na}{childrenOf}\PYG{o}{(}\PYG{n}{childRoot}\PYG{o}{),} \PYG{n}{followingChildren}\PYG{o}{)}
+						\PYG{o}{.}\PYG{n+na}{flatMap}\PYG{o}{(}\PYG{n}{List}\PYG{o}{::}\PYG{n}{stream}\PYG{o}{).}\PYG{n+na}{collect}\PYG{o}{(}\PYG{n}{toList}\PYG{o}{());}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{n}{Set}\PYG{o}{\PYGZlt{}}\PYG{n}{ComputationalNode}\PYG{o}{\PYGZgt{}} \PYG{n+nf}{parents}\PYG{o}{(}\PYG{n}{Node} \PYG{n}{n}\PYG{o}{,} \PYG{n}{Graph} \PYG{n}{g}\PYG{o}{,} \PYG{n}{Set}\PYG{o}{\PYGZlt{}}\PYG{n}{ComputationalNode}\PYG{o}{\PYGZgt{}} \PYG{n}{parents}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{n}{parents}\PYG{o}{.}\PYG{n+na}{addAll}\PYG{o}{(}\PYG{n}{g}\PYG{o}{.}\PYG{n+na}{getRoots}\PYG{o}{().}\PYG{n+na}{stream}\PYG{o}{().}\PYG{n+na}{filter}\PYG{o}{(}\PYG{n}{ComputationalNode}\PYG{o}{.}\PYG{n+na}{class}\PYG{o}{::}\PYG{n}{isInstance}\PYG{o}{)}
+						\PYG{o}{.}\PYG{n+na}{map}\PYG{o}{(}\PYG{n}{ComputationalNode}\PYG{o}{.}\PYG{n+na}{class}\PYG{o}{::}\PYG{n}{cast}\PYG{o}{).}\PYG{n+na}{filter}\PYG{o}{(}\PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{r}\PYG{o}{.}\PYG{n+na}{inputs}\PYG{o}{().}\PYG{n+na}{contains}\PYG{o}{(}\PYG{n}{n}\PYG{o}{))}
+						\PYG{o}{.}\PYG{n+na}{collect}\PYG{o}{(}\PYG{n}{toList}\PYG{o}{()));}
+		\PYG{n}{g}\PYG{o}{.}\PYG{n+na}{getRoots}\PYG{o}{().}\PYG{n+na}{stream}\PYG{o}{().}\PYG{n+na}{filter}\PYG{o}{(}\PYG{n}{ComputationalNode}\PYG{o}{.}\PYG{n+na}{class}\PYG{o}{::}\PYG{n}{isInstance}\PYG{o}{).}\PYG{n+na}{map}\PYG{o}{(}\PYG{n}{ComputationalNode}\PYG{o}{.}\PYG{n+na}{class}\PYG{o}{::}\PYG{n}{cast}\PYG{o}{)}
+					\PYG{o}{.}\PYG{n+na}{forEach}\PYG{o}{(}\PYG{n}{r} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{parents}\PYG{o}{.}\PYG{n+na}{addAll}\PYG{o}{(}\PYG{n}{g}\PYG{o}{.}\PYG{n+na}{childrenOf}\PYG{o}{(}\PYG{n}{r}\PYG{o}{).}\PYG{n+na}{stream}\PYG{o}{().}\PYG{n+na}{map}\PYG{o}{(}\PYG{n}{c} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{parents}\PYG{o}{(}\PYG{n}{n}\PYG{o}{,} \PYG{n}{c}\PYG{o}{,} \PYG{n}{parents}\PYG{o}{))}
+					\PYG{o}{.}\PYG{n+na}{flatMap}\PYG{o}{(}\PYG{n}{Set}\PYG{o}{::}\PYG{n}{stream}\PYG{o}{).}\PYG{n+na}{collect}\PYG{o}{(}\PYG{n}{toSet}\PYG{o}{())));}
+		\PYG{k}{return} \PYG{n}{parents}\PYG{o}{;}
+	\PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

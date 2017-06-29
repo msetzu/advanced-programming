@@ -1,0 +1,18 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph}\PYG{o}{;}
+
+\PYG{k+kd}{public} \PYG{k+kd}{enum} \PYG{n}{Operation} \PYG{o}{\PYGZob{}}
+    \PYG{n}{SUM}\PYG{o}{,} \PYG{n}{MUL}\PYG{o}{;}
+
+	\PYG{k+kd}{public} \PYG{k+kd}{static} \PYG{k+kt}{boolean} \PYG{n+nf}{isValid}\PYG{o}{(}\PYG{n}{Operation} \PYG{n}{op}\PYG{o}{,} \PYG{n}{Integer}\PYG{o}{[]} \PYG{n}{lOp}\PYG{o}{,} \PYG{n}{Integer}\PYG{o}{[]} \PYG{n}{rOp}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k}{switch} \PYG{o}{(}\PYG{n}{op}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		    \PYG{k}{case} \PYG{n}{SUM}\PYG{o}{:} \PYG{k}{return} \PYG{n}{lOp}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]} \PYG{o}{==} \PYG{n}{rOp}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{]} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{lOp}\PYG{o}{[}\PYG{l+m+mi}{1}\PYG{o}{]} \PYG{o}{==} \PYG{n}{rOp}\PYG{o}{[}\PYG{l+m+mi}{1}\PYG{o}{];}
+		    \PYG{k}{default}\PYG{o}{:} \PYG{k}{return} \PYG{n}{lOp}\PYG{o}{[}\PYG{l+m+mi}{1}\PYG{o}{]} \PYG{o}{==} \PYG{n}{rOp}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{];}
+		\PYG{o}{\PYGZcb{}}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{public} \PYG{k+kd}{static} \PYG{n}{Integer}\PYG{o}{[]} \PYG{n+nf}{dimensions}\PYG{o}{(}\PYG{n}{Operation} \PYG{n}{op}\PYG{o}{,} \PYG{n}{Integer}\PYG{o}{[]} \PYG{n}{lOp}\PYG{o}{,} \PYG{n}{Integer}\PYG{o}{[]} \PYG{n}{rOp}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k}{switch} \PYG{o}{(}\PYG{n}{op}\PYG{o}{)} \PYG{o}{\PYGZob{}} \PYG{k}{case} \PYG{n}{SUM}\PYG{o}{:} \PYG{k}{return} \PYG{n}{lOp}\PYG{o}{;} \PYG{k}{default}\PYG{o}{:}	\PYG{k}{return} \PYG{k}{new} \PYG{n}{Integer}\PYG{o}{[]\PYGZob{}}\PYG{n}{lOp}\PYG{o}{[}\PYG{l+m+mi}{0}\PYG{o}{],} \PYG{n}{rOp}\PYG{o}{[}\PYG{l+m+mi}{1}\PYG{o}{]\PYGZcb{};} \PYG{o}{\PYGZcb{}}
+	\PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

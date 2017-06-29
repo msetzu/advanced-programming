@@ -1,0 +1,19 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph}\PYG{o}{;}
+
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.List}\PYG{o}{;}
+
+\PYG{k+kd}{public} \PYG{k+kd}{class} \PYG{n+nc}{ComputationalNode} \PYG{k+kd}{extends} \PYG{n}{Node}\PYG{o}{\PYGZlt{}}\PYG{n}{Operation}\PYG{o}{\PYGZgt{}} \PYG{o}{\PYGZob{}}
+	\PYG{k+kd}{private} \PYG{k+kd}{final} \PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Node}\PYG{o}{\PYGZgt{}} \PYG{n}{inputs}\PYG{o}{;}
+
+	\PYG{k+kd}{public} \PYG{n+nf}{ComputationalNode}\PYG{o}{(}\PYG{n}{String} \PYG{n}{name}\PYG{o}{,} \PYG{n}{Operation} \PYG{n}{operation}\PYG{o}{,} \PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Node}\PYG{o}{\PYGZgt{}} \PYG{n}{inputs}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k+kd}{super}\PYG{o}{(}\PYG{n}{name}\PYG{o}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{o}{,} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{o}{);}
+		\PYG{n}{put}\PYG{o}{(}\PYG{n}{name}\PYG{o}{,} \PYG{n}{operation}\PYG{o}{);}
+		\PYG{k}{this}\PYG{o}{.}\PYG{n+na}{inputs} \PYG{o}{=} \PYG{n}{inputs}\PYG{o}{;}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{public} \PYG{n}{Operation} \PYG{n+nf}{operation}\PYG{o}{()} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{k}{this}\PYG{o}{.}\PYG{n+na}{get}\PYG{o}{(}\PYG{k}{this}\PYG{o}{.}\PYG{n+na}{name}\PYG{o}{);} \PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{public} \PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{Node}\PYG{o}{\PYGZgt{}} \PYG{n+nf}{inputs}\PYG{o}{()} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{n}{inputs}\PYG{o}{;} \PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}

@@ -1,0 +1,6 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph}\PYG{o}{;}
+
+\PYG{c+c1}{// Possible operations on the graph}
+\PYG{k+kd}{public} \PYG{k+kd}{enum} \PYG{n}{Operation} \PYG{o}{\PYGZob{}} \PYG{n}{SUM}\PYG{o}{,} \PYG{n}{MUL} \PYG{o}{\PYGZcb{}}
+\end{Verbatim}

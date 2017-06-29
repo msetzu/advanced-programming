@@ -1,0 +1,147 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph.json}\PYG{o}{;}
+
+\PYG{k+kn}{import} \PYG{n+nn}{com.github.msetzu.pa.graph.Operation}\PYG{o}{;}
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.*}\PYG{o}{;}
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.regex.*}\PYG{o}{;}
+
+\PYG{k+kd}{public} \PYG{k+kd}{class} \PYG{n+nc}{JSONParser} \PYG{o}{\PYGZob{}}
+	\PYG{k+kd}{private} \PYG{k+kd}{static} \PYG{n}{Pattern} \PYG{n}{pat}\PYG{o}{;}
+	\PYG{k+kd}{private} \PYG{k+kd}{static} \PYG{n}{Matcher} \PYG{n}{mtc}\PYG{o}{;}
+	\PYG{k+kd}{private} \PYG{n}{String} \PYG{n}{json}\PYG{o}{;}
+	\PYG{k+kd}{private} \PYG{n}{Map}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{,} \PYG{n}{Map}\PYG{o}{\PYGZlt{}}\PYG{n}{Token}\PYG{o}{,} \PYG{n}{String}\PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{n}{nodes} \PYG{o}{=} \PYG{k}{new} \PYG{n}{HashMap}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+	\PYG{k+kd}{private} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{names} 		\PYG{o}{=} \PYG{k}{new} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+	\PYG{k+kd}{private} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{types} 		\PYG{o}{=} \PYG{k}{new} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+	\PYG{k+kd}{private} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{shapes} 	\PYG{o}{=} \PYG{k}{new} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+	\PYG{k+kd}{private} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{inputs} 	\PYG{o}{=} \PYG{k}{new} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+	\PYG{k+kd}{private} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}}\PYG{n}{Operation}\PYG{o}{\PYGZgt{}} \PYG{n}{operators} 	\PYG{o}{=} \PYG{k}{new} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+	\PYG{k+kd}{private} \PYG{n}{Token} \PYG{n}{lastActive} \PYG{o}{=} \PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}BRACKET}\PYG{o}{;}				\PYG{c+c1}{// Last active tokens}
+	\PYG{k+kd}{private} \PYG{n}{Optional}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{currentNode} \PYG{o}{=} \PYG{n}{Optional}\PYG{o}{.}\PYG{n+na}{empty}\PYG{o}{();}	\PYG{c+c1}{// Active node}
+
+	\PYG{k+kd}{public} \PYG{n+nf}{JSONParser}\PYG{o}{(}\PYG{n}{String} \PYG{n}{json}\PYG{o}{)} \PYG{o}{\PYGZob{}} \PYG{k}{this}\PYG{o}{.}\PYG{n+na}{json} \PYG{o}{=} \PYG{n}{json}\PYG{o}{;} \PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{public} \PYG{k+kt}{void} \PYG{n+nf}{parse}\PYG{o}{()} \PYG{k+kd}{throws} \PYG{n}{IllegalArgumentException} \PYG{o}{\PYGZob{}}
+		\PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{O\PYGZus{}BRACKET}\PYG{o}{).}\PYG{n+na}{matchSequence}\PYG{o}{(}\PYG{n}{Element}\PYG{o}{.}\PYG{n+na}{NODE}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}BRACKET}\PYG{o}{);}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{n}{JSONParser} \PYG{n+nf}{matchNode}\PYG{o}{()} \PYG{k+kd}{throws} \PYG{n}{IllegalArgumentException} \PYG{o}{\PYGZob{}}
+		\PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{NAME}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{COLON}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{O\PYGZus{}BRACKET}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{TYPE}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{TYPECASE}\PYG{o}{);}
+		\PYG{n}{lastActive} \PYG{o}{=} \PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{NAME}\PYG{o}{;}
+
+		\PYG{k}{if} \PYG{o}{(}\PYG{n}{types}\PYG{o}{.}\PYG{n+na}{peek}\PYG{o}{().}\PYG{n+na}{contains}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}input\PYGZdq{}}\PYG{o}{))}
+			\PYG{k}{return} \PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{COMMA}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{SHAPE}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{O\PYGZus{}SQ\PYGZus{}BRACKET}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{INT}\PYG{o}{)}
+					\PYG{o}{.}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{COMMA}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{INT}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}SQ\PYGZus{}BRACKET}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}BRACKET}\PYG{o}{);}
+		\PYG{k}{else}
+			\PYG{k}{return}	\PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{COMMA}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{OP}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{OPERATION}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{O\PYGZus{}SQ\PYGZus{}BRACKET}\PYG{o}{)}
+					\PYG{o}{.}\PYG{n+na}{matchSequence}\PYG{o}{(}\PYG{n}{Element}\PYG{o}{.}\PYG{n+na}{COMBINED}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}SQ\PYGZus{}BRACKET}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}BRACKET}\PYG{o}{);}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{n}{JSONParser} \PYG{n+nf}{match}\PYG{o}{(}\PYG{n}{Token} \PYG{n}{t}\PYG{o}{)} \PYG{k+kd}{throws} \PYG{n}{IllegalArgumentException} \PYG{o}{\PYGZob{}}
+		\PYG{k}{if} \PYG{o}{(}\PYG{n}{json}\PYG{o}{.}\PYG{n+na}{isEmpty}\PYG{o}{()} \PYG{o}{\PYGZam{}\PYGZam{}} \PYG{n}{t}\PYG{o}{.}\PYG{n+na}{equals}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}BRACKET}\PYG{o}{))} \PYG{k}{return} \PYG{k}{this}\PYG{o}{;}
+
+		\PYG{n}{String} \PYG{n}{sp} \PYG{o}{=} \PYG{l+s}{\PYGZdq{} *\PYGZdq{}}\PYG{o}{;} \PYG{n}{String} \PYG{n}{num} \PYG{o}{=} \PYG{l+s}{\PYGZdq{}0*[1\PYGZhy{}9]+(\PYGZbs{}\PYGZbs{}.[0\PYGZhy{}9]+)?\PYGZdq{}}\PYG{o}{;}
+		\PYG{n}{String} \PYG{n}{vector} \PYG{o}{=} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZbs{}[\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{n}{num} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}(,\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{n}{num} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})*\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}]\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp}\PYG{o}{;}
+		\PYG{n}{String} \PYG{n}{matrix} \PYG{o}{=} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZbs{}[\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{n}{vector} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}(,\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{n}{vector} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})*\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}]\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp}\PYG{o}{;}
+
+		\PYG{k}{switch} \PYG{o}{(}\PYG{n}{t}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+			\PYG{k}{case} \PYG{n}{O\PYGZus{}BRACKET}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZbs{}\PYGZob{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{C\PYGZus{}BRACKET}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZcb{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{O\PYGZus{}SQ\PYGZus{}BRACKET}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZbs{}[ *)\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{C\PYGZus{}SQ\PYGZus{}BRACKET}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}]\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{SPACES}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{COMMA}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{},\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{COLON}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}:\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{NAME}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}[a\PYGZhy{}z]+\PYGZbs{}\PYGZdq{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{FLOAT}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(0*[1\PYGZhy{}9]+(\PYGZbs{}\PYGZbs{}.[1\PYGZhy{}9]+)?)\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{INT}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}[0\PYGZhy{}9]+\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{MATRIX}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{matrix} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{TYPE}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}type\PYGZbs{}\PYGZdq{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}:\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{TYPECASE}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}(\PYGZbs{}\PYGZdq{}input\PYGZbs{}\PYGZdq{})|(\PYGZbs{}\PYGZdq{}comp\PYGZbs{}\PYGZdq{}))\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{SHAPE}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}shape\PYGZbs{}\PYGZdq{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}:\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{INPUT}\PYG{o}{:}	\PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}input\PYGZbs{}\PYGZdq{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}:\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{COMP}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}comp\PYGZbs{}\PYGZdq{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{},\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{OP}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}op\PYGZbs{}\PYGZdq{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}:\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{OPERATION}\PYG{o}{:} \PYG{n}{pat} \PYG{o}{=} \PYG{n}{Pattern}\PYG{o}{.}\PYG{n+na}{compile}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZca{}(\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}((mult)|(sum))\PYGZbs{}\PYGZdq{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{},\PYGZdq{}}
+										\PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}in\PYGZbs{}\PYGZdq{}\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}:\PYGZdq{}} \PYG{o}{+} \PYG{n}{sp} \PYG{o}{+} \PYG{l+s}{\PYGZdq{})\PYGZdq{}}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+		\PYG{o}{\PYGZcb{}}
+		\PYG{n}{mtc} \PYG{o}{=} \PYG{n}{pat}\PYG{o}{.}\PYG{n+na}{matcher}\PYG{o}{(}\PYG{n}{json}\PYG{o}{);}
+		\PYG{k+kt}{int} \PYG{n}{index} \PYG{o}{=} \PYG{n}{mtc}\PYG{o}{.}\PYG{n+na}{find}\PYG{o}{()} \PYG{o}{?} \PYG{n}{mtc}\PYG{o}{.}\PYG{n+na}{start}\PYG{o}{()} \PYG{o}{:} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{o}{;}
+
+		\PYG{k}{if} \PYG{o}{(}\PYG{n}{index} \PYG{o}{==} \PYG{o}{\PYGZhy{}}\PYG{l+m+mi}{1}\PYG{o}{)} \PYG{k}{throw} \PYG{k}{new} \PYG{n}{IllegalArgumentException}\PYG{o}{(}\PYG{n}{t}\PYG{o}{.}\PYG{n+na}{name}\PYG{o}{());}
+		\PYG{n}{String} \PYG{n}{val} \PYG{o}{=} \PYG{n}{json}\PYG{o}{.}\PYG{n+na}{substring}\PYG{o}{(}\PYG{n}{mtc}\PYG{o}{.}\PYG{n+na}{start}\PYG{o}{(),} \PYG{n}{mtc}\PYG{o}{.}\PYG{n+na}{end}\PYG{o}{());}
+
+		\PYG{k}{switch} \PYG{o}{(}\PYG{n}{t}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+			\PYG{k}{case} \PYG{n}{C\PYGZus{}BRACKET}\PYG{o}{:}
+				\PYG{k}{if} \PYG{o}{(}\PYG{n}{lastActive}\PYG{o}{.}\PYG{n+na}{equals}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{END}\PYG{o}{)} \PYG{o}{||} \PYG{n}{names}\PYG{o}{.}\PYG{n+na}{size}\PYG{o}{()} \PYG{o}{==} \PYG{l+m+mi}{0}\PYG{o}{)} \PYG{k}{return} \PYG{k}{this}\PYG{o}{;}
+				\PYG{n}{HashMap}\PYG{o}{\PYGZlt{}}\PYG{n}{Token}\PYG{o}{,} \PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{map} \PYG{o}{=} \PYG{k}{new} \PYG{n}{HashMap}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+
+				\PYG{n}{map}\PYG{o}{.}\PYG{n+na}{put}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{NAME}\PYG{o}{,} \PYG{n}{names}\PYG{o}{.}\PYG{n+na}{peek}\PYG{o}{());}
+				\PYG{n}{nodes}\PYG{o}{.}\PYG{n+na}{put}\PYG{o}{(}\PYG{n}{names}\PYG{o}{.}\PYG{n+na}{pop}\PYG{o}{(),} \PYG{n}{map}\PYG{o}{);}
+
+				\PYG{k}{if} \PYG{o}{(}\PYG{n}{types}\PYG{o}{.}\PYG{n+na}{peek}\PYG{o}{().}\PYG{n+na}{contains}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}input\PYGZdq{}}\PYG{o}{))} \PYG{o}{\PYGZob{}}
+					\PYG{n}{map}\PYG{o}{.}\PYG{n+na}{put}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{TYPECASE}\PYG{o}{,} \PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{INPUT}\PYG{o}{.}\PYG{n+na}{name}\PYG{o}{().}\PYG{n+na}{replace}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}\PYGZdq{}}\PYG{o}{,}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{));}
+					\PYG{n}{map}\PYG{o}{.}\PYG{n+na}{put}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{SHAPE}\PYG{o}{,} \PYG{n}{shapes}\PYG{o}{.}\PYG{n+na}{get}\PYG{o}{(}\PYG{n}{shapes}\PYG{o}{.}\PYG{n+na}{size}\PYG{o}{()} \PYG{o}{\PYGZhy{}} \PYG{l+m+mi}{2}\PYG{o}{)} \PYG{o}{+} \PYG{l+s}{\PYGZdq{} \PYGZdq{}} \PYG{o}{+} \PYG{n}{shapes}\PYG{o}{.}\PYG{n+na}{peek}\PYG{o}{());}
+					\PYG{n}{shapes}\PYG{o}{.}\PYG{n+na}{pop}\PYG{o}{();} \PYG{n}{shapes}\PYG{o}{.}\PYG{n+na}{pop}\PYG{o}{();}
+				\PYG{o}{\PYGZcb{}} \PYG{k}{else} \PYG{o}{\PYGZob{}}
+					\PYG{n}{map}\PYG{o}{.}\PYG{n+na}{put}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{TYPECASE}\PYG{o}{,} \PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{COMP}\PYG{o}{.}\PYG{n+na}{name}\PYG{o}{());}
+					\PYG{n}{map}\PYG{o}{.}\PYG{n+na}{put}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{OP}\PYG{o}{,} \PYG{n}{operators}\PYG{o}{.}\PYG{n+na}{peek}\PYG{o}{().}\PYG{n+na}{name}\PYG{o}{());}
+					\PYG{n}{map}\PYG{o}{.}\PYG{n+na}{put}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{INPUT}\PYG{o}{,} \PYG{n}{inputs}\PYG{o}{.}\PYG{n+na}{stream}\PYG{o}{().}\PYG{n+na}{map}\PYG{o}{(}\PYG{n}{in} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{in}\PYG{o}{.}\PYG{n+na}{replace}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}\PYGZdq{}}\PYG{o}{,}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{)} \PYG{o}{+} \PYG{l+s}{\PYGZdq{}\PYGZti{}\PYGZdq{}}\PYG{o}{).}\PYG{n+na}{reduce}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{,} \PYG{n}{String}\PYG{o}{::}\PYG{n}{concat}\PYG{o}{));}
+					\PYG{n}{inputs} \PYG{o}{=} \PYG{k}{new} \PYG{n}{Stack}\PYG{o}{\PYGZlt{}\PYGZgt{}();}
+				\PYG{o}{\PYGZcb{}}
+				\PYG{n}{types}\PYG{o}{.}\PYG{n+na}{pop}\PYG{o}{();}
+				\PYG{n}{currentNode} \PYG{o}{=} \PYG{n}{Optional}\PYG{o}{.}\PYG{n+na}{empty}\PYG{o}{();}
+				\PYG{n}{lastActive} \PYG{o}{=} \PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}BRACKET}\PYG{o}{;}
+				\PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{NAME}\PYG{o}{:}
+				\PYG{k}{if} \PYG{o}{(}\PYG{n}{lastActive}\PYG{o}{.}\PYG{n+na}{equals}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{NAME}\PYG{o}{))} \PYG{n}{inputs}\PYG{o}{.}\PYG{n+na}{push}\PYG{o}{(}\PYG{n}{val}\PYG{o}{);}
+				\PYG{k}{else} \PYG{n}{names}\PYG{o}{.}\PYG{n+na}{push}\PYG{o}{(}\PYG{n}{val}\PYG{o}{.}\PYG{n+na}{replace}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZbs{}\PYGZdq{}\PYGZdq{}}\PYG{o}{,} \PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{));}
+
+				\PYG{n}{currentNode}\PYG{o}{.}\PYG{n+na}{ifPresent}\PYG{o}{(}\PYG{n}{v} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{currentNode} \PYG{o}{=} \PYG{n}{Optional}\PYG{o}{.}\PYG{n+na}{of}\PYG{o}{(}\PYG{n}{v}\PYG{o}{));}
+				\PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{FLOAT}\PYG{o}{:} \PYG{k}{case} \PYG{n}{MATRIX}\PYG{o}{:}
+				\PYG{n}{inputs}\PYG{o}{.}\PYG{n+na}{push}\PYG{o}{(}\PYG{n}{val}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{INT}\PYG{o}{:} 		\PYG{n}{shapes}\PYG{o}{.}\PYG{n+na}{push}\PYG{o}{(}\PYG{n}{val}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{TYPECASE}\PYG{o}{:} 	\PYG{n}{types}\PYG{o}{.}\PYG{n+na}{push}\PYG{o}{(}\PYG{n}{val}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+			\PYG{k}{case} \PYG{n}{OPERATION}\PYG{o}{:} \PYG{n}{operators}\PYG{o}{.}\PYG{n+na}{push}\PYG{o}{(}\PYG{n}{val}\PYG{o}{.}\PYG{n+na}{contains}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}mul\PYGZdq{}}\PYG{o}{)} \PYG{o}{?} \PYG{n}{Operation}\PYG{o}{.}\PYG{n+na}{MUL} \PYG{o}{:} \PYG{n}{Operation}\PYG{o}{.}\PYG{n+na}{SUM}\PYG{o}{);} \PYG{k}{break}\PYG{o}{;}
+		\PYG{o}{\PYGZcb{}}
+
+		\PYG{n}{json} \PYG{o}{=} \PYG{n}{json}\PYG{o}{.}\PYG{n+na}{substring}\PYG{o}{(}\PYG{n}{mtc}\PYG{o}{.}\PYG{n+na}{end}\PYG{o}{());}
+		\PYG{k}{return} \PYG{k}{this}\PYG{o}{;}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{private} \PYG{n}{JSONParser} \PYG{n+nf}{matchSequence}\PYG{o}{(}\PYG{n}{Element} \PYG{n}{e}\PYG{o}{)} \PYG{k+kd}{throws} \PYG{n}{IllegalArgumentException} \PYG{o}{\PYGZob{}}
+		\PYG{k}{switch} \PYG{o}{(}\PYG{n}{e}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+			\PYG{k}{case} \PYG{n}{EPSILON}\PYG{o}{:} \PYG{k}{return} \PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}BRACKET}\PYG{o}{);}
+			\PYG{k}{case} \PYG{n}{NODE}\PYG{o}{:}
+				\PYG{k}{try} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}BRACKET}\PYG{o}{);} \PYG{o}{\PYGZcb{}}
+				\PYG{k}{catch} \PYG{o}{(}\PYG{n}{IllegalArgumentException} \PYG{n}{emptySequence}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+					\PYG{n}{matchNode}\PYG{o}{();}					\PYG{c+c1}{// Sequence with \PYGZgt{}= 1 elements.}
+					\PYG{k}{try} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{COMMA}\PYG{o}{).}\PYG{n+na}{matchNode}\PYG{o}{().}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{COMMA}\PYG{o}{).}\PYG{n+na}{matchSequence}\PYG{o}{(}\PYG{n}{Element}\PYG{o}{.}\PYG{n+na}{NODE}\PYG{o}{);} \PYG{o}{\PYGZcb{}}
+					\PYG{k}{catch} \PYG{o}{(}\PYG{n}{IllegalArgumentException} \PYG{n}{nonEmptySequence}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+						\PYG{k}{switch} \PYG{o}{(}\PYG{n}{nonEmptySequence}\PYG{o}{.}\PYG{n+na}{getMessage}\PYG{o}{())} \PYG{o}{\PYGZob{}}
+							\PYG{k}{case} \PYG{l+s}{\PYGZdq{}COMMA\PYGZdq{}}\PYG{o}{:} \PYG{n}{lastActive} \PYG{o}{=} \PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{END}\PYG{o}{;} \PYG{k}{return} \PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{C\PYGZus{}BRACKET}\PYG{o}{);}
+							\PYG{k}{case} \PYG{l+s}{\PYGZdq{}NODE\PYGZdq{}}\PYG{o}{:} \PYG{k}{throw} \PYG{n}{nonEmptySequence}\PYG{o}{;}	\PYG{c+c1}{// Malformed JSON.}
+					\PYG{o}{\PYGZcb{}\PYGZcb{}}
+				\PYG{o}{\PYGZcb{}}
+			\PYG{k}{case} \PYG{n}{COMBINED}\PYG{o}{:}
+				\PYG{k}{try} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{MATRIX}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{COMMA}\PYG{o}{).}\PYG{n+na}{matchSequence}\PYG{o}{(}\PYG{n}{Element}\PYG{o}{.}\PYG{n+na}{COMBINED}\PYG{o}{);} \PYG{o}{\PYGZcb{}}
+				\PYG{k}{catch} \PYG{o}{(}\PYG{n}{IllegalArgumentException} \PYG{n}{exception}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+					\PYG{k}{switch} \PYG{o}{(}\PYG{n}{exception}\PYG{o}{.}\PYG{n+na}{getMessage}\PYG{o}{())} \PYG{o}{\PYGZob{}}
+						\PYG{k}{case} \PYG{l+s}{\PYGZdq{}MATRIX\PYGZdq{}}\PYG{o}{:}
+							\PYG{k}{try} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{n}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{NAME}\PYG{o}{).}\PYG{n+na}{match}\PYG{o}{(}\PYG{n}{Token}\PYG{o}{.}\PYG{n+na}{COMMA}\PYG{o}{).}\PYG{n+na}{matchSequence}\PYG{o}{(}\PYG{n}{Element}\PYG{o}{.}\PYG{n+na}{COMBINED}\PYG{o}{);} \PYG{o}{\PYGZcb{}}
+							\PYG{k}{catch} \PYG{o}{(}\PYG{n}{IllegalArgumentException} \PYG{n}{matrixException}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+								\PYG{k}{switch} \PYG{o}{(}\PYG{n}{matrixException}\PYG{o}{.}\PYG{n+na}{getMessage}\PYG{o}{())} \PYG{o}{\PYGZob{}}
+									\PYG{k}{case} \PYG{l+s}{\PYGZdq{}NAME\PYGZdq{}}\PYG{o}{:} \PYG{k}{throw} \PYG{n}{matrixException}\PYG{o}{;}	\PYG{c+c1}{// Not a matrix, nor a name, must be malformed}
+									\PYG{k}{case} \PYG{l+s}{\PYGZdq{}COMMA\PYGZdq{}}\PYG{o}{:} \PYG{k}{return} \PYG{k}{this}\PYG{o}{;}
+						\PYG{o}{\PYGZcb{}\PYGZcb{}}
+						\PYG{k}{case} \PYG{l+s}{\PYGZdq{}COMMA\PYGZdq{}}\PYG{o}{:} \PYG{k}{return} \PYG{k}{this}\PYG{o}{;}						\PYG{c+c1}{// No comma, must be last element.}
+					\PYG{o}{\PYGZcb{}}
+				\PYG{o}{\PYGZcb{}\PYGZcb{}}
+		\PYG{k}{throw} \PYG{k}{new} \PYG{n}{IllegalArgumentException}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}SWITCH\PYGZdq{}}\PYG{o}{);}
+	\PYG{o}{\PYGZcb{}}
+
+	\PYG{k+kd}{public} \PYG{n}{Map}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{,} \PYG{n}{Map}\PYG{o}{\PYGZlt{}}\PYG{n}{Token}\PYG{o}{,} \PYG{n}{String}\PYG{o}{\PYGZgt{}\PYGZgt{}} \PYG{n+nf}{getNodes}\PYG{o}{()} \PYG{o}{\PYGZob{}} \PYG{k}{return} \PYG{n}{nodes}\PYG{o}{;} \PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+
+\PYG{k+kd}{enum} \PYG{n}{Element} \PYG{o}{\PYGZob{}}\PYG{n}{EPSILON}\PYG{o}{,} \PYG{n}{NODE}\PYG{o}{,} \PYG{n}{COMBINED} \PYG{o}{\PYGZcb{}}
+\end{Verbatim}

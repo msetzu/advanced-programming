@@ -1,0 +1,11 @@
+\begin{Verbatim}[commandchars=\\\{\}]
+\PYG{k+kn}{package} \PYG{n+nn}{com.github.msetzu.pa.graph.compilers}\PYG{o}{;}
+
+\PYG{k+kn}{import} \PYG{n+nn}{java.util.List}\PYG{o}{;}
+
+\PYG{k+kd}{class} \PYG{n+nc}{SumCompiler} \PYG{k+kd}{extends} \PYG{n}{OperationCompiler} \PYG{o}{\PYGZob{}}
+	\PYG{n}{String} \PYG{n+nf}{compile}\PYG{o}{(}\PYG{n}{List}\PYG{o}{\PYGZlt{}}\PYG{n}{String}\PYG{o}{\PYGZgt{}} \PYG{n}{operands}\PYG{o}{)} \PYG{o}{\PYGZob{}}
+		\PYG{k}{return} \PYG{n}{operands}\PYG{o}{.}\PYG{n+na}{stream}\PYG{o}{().}\PYG{n+na}{reduce}\PYG{o}{(}\PYG{l+s}{\PYGZdq{}\PYGZdq{}}\PYG{o}{,} \PYG{o}{(}\PYG{n}{a}\PYG{o}{,} \PYG{n}{b}\PYG{o}{)} \PYG{o}{\PYGZhy{}\PYGZgt{}} \PYG{n}{val}\PYG{o}{(}\PYG{n}{a}\PYG{o}{)} \PYG{o}{+} \PYG{l+s}{\PYGZdq{} + \PYGZdq{}} \PYG{o}{+} \PYG{n}{val}\PYG{o}{(}\PYG{n}{b}\PYG{o}{)).}\PYG{n+na}{substring}\PYG{o}{(}\PYG{l+m+mi}{3}\PYG{o}{);}
+	\PYG{o}{\PYGZcb{}}
+\PYG{o}{\PYGZcb{}}
+\end{Verbatim}
